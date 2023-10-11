@@ -28,7 +28,7 @@
                         <div class="my-auto">
 
                             <div>
-                                <h5 class="text-primary">Seja bem-vindo</h5>
+                                <h5 class="text-primary">Seja bem-vindo(a)</h5>
                                 <p class="text-muted">Faça login para acessar o sistema</p>
                             </div>
 
@@ -39,7 +39,7 @@
                                         <label for="email">Email</label>
                                         <input type="email" class="form-control" id="email" formControlName="email"
                                             [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
-                                            placeholder="Enter email">
+                                            placeholder="Entre com seu e-mail">
                                         <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                                             <div *ngIf="f.email.errors.required">O email é obrigatório</div>
                                             <div *ngIf="f.email.errors.email">O email deve ser um endereço válido
@@ -49,17 +49,17 @@
 
                                     <div class="mb-3">
                                         <div class="float-end">
-                                            <a routerLink="/account/recoverpwd-2" class="text-muted">Esqueceu sua 
+                                            <a routerLink="/account/reset-password" class="text-muted">Esqueceu sua 
                                                 senha?</a>
                                         </div>
                                         <label for="userpassword">Senha</label>
                                         <div class="input-group auth-pass-inputgroup">
-                                            <input type="password" class="form-control" formControlName="password"
+                                            <input type="{{isPassword ? 'password' : 'text'}}" class="form-control" formControlName="password"
                                                 [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-                                                placeholder="Enter password" aria-label="Password"
+                                                placeholder="Entre com a senha" aria-label="Password"
                                                 aria-describedby="password-addon">
                                             <button class="btn btn-light " type="button" id="password-addon"><i
-                                                    class="mdi mdi-eye-outline"></i></button>
+                                                    class="mdi mdi-eye-outline" (click)="showHide()"></i></button>
                                             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                                 <span *ngIf="f.password.errors.required">A senha é obrigatória</span>
                                             </div>

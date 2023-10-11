@@ -30,14 +30,17 @@ export class Login2Component implements OnInit {
   submitted = false;
   error = '';
   returnUrl: string;
+  emailGet: string;
+  isPassword: boolean = true;
 
   // set the currenr year
   year: number = new Date().getFullYear();
 
   ngOnInit(): void {
+    this.emailGet = this.route.snapshot.queryParams['emailGet'] || '';
     document.body.classList.add('auth-body-bg')
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: [this.emailGet, [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
 
@@ -46,6 +49,7 @@ export class Login2Component implements OnInit {
     // get return url from route parameters or default to '/'
     // tslint:disable-next-line: no-string-literal
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
   }
 
   carouselOption: OwlOptions = {
@@ -94,5 +98,9 @@ export class Login2Component implements OnInit {
     } else{
       this.router.navigate(['/dashboard']);
     }
+  }
+
+  showHide(){
+    this.isPassword = !this.isPassword;
   }
 }

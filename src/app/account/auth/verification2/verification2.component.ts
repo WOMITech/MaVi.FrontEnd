@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
@@ -8,10 +9,12 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 })
 export class Verification2Component implements OnInit {
 
-  constructor() { }
+  public emailGett: string;
+  constructor(private route: ActivatedRoute, private router: Router ) { }
   // set the currenr year
   year: number = new Date().getFullYear();
   ngOnInit(): void {
+    this.emailGett = this.route.snapshot.queryParams['emailGet'] || 'exemplo@email.com';
   }
 
   carouselOption: OwlOptions = {
@@ -25,5 +28,10 @@ export class Verification2Component implements OnInit {
         items: 1
       },
     }
+  }
+
+  verificarEmail()
+  {
+    this.router.navigate(['/account/verificar-email-2'], { queryParams: { emailGet: this.emailGett } });
   }
 }

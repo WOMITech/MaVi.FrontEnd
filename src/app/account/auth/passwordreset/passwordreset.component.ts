@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
+import { Email } from 'src/app/models/user/request/email.model';
+import { UserService } from 'src/app/services/user.service';
+import { ResponseVerificar } from 'src/app/models/user/response/response.verificar.model';
 
 @Component({
   selector: 'app-passwordreset',
@@ -26,7 +29,7 @@ export class PasswordresetComponent implements OnInit, AfterViewInit {
   year: number = new Date().getFullYear();
 
   // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private userService: UserService) { }
 
   ngOnInit() {
 
@@ -48,15 +51,19 @@ export class PasswordresetComponent implements OnInit, AfterViewInit {
     this.success = '';
     this.submitted = true;
 
+
     // stop here if form is invalid
     if (this.resetForm.invalid) {
       return;
     }
-    if (environment.defaultauth === 'firebase') {
-      this.authenticationService.resetPassword(this.f.email.value)
-        .catch(error => {
-          this.error = error ? error : '';
-        });
-    }
+
+    this.userService.enviarCodigoResetSenha(new Email(this.f.email.value)).subscribe((res: ResponseVerificar) => {
+      if (res.isSuccess) {
+        this.router.navigate(['confirm-email-3'])
+      }
+    },
+      (error => {
+        this.error = error ? error : '';
+      }));
   }
 }
