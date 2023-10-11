@@ -20,7 +20,7 @@ export class Steptwoverification2Component implements OnInit {
   // set the currenr year
   year: number = new Date().getFullYear();
   ngOnInit(): void {
-    this.emailGet = this.route.snapshot.queryParams['emailGet'] || 'exemplo@email.com';
+    this.emailGet = this.route.snapshot.queryParams['emailGet'] || 'seu e-mail';
   }
   config = {
     letterCase: "Upper",
@@ -30,8 +30,8 @@ export class Steptwoverification2Component implements OnInit {
     disableAutoFocus: false,
     placeholder: '',
     inputStyles: {
-      'width': '50px',
-      'height': '50px'
+      'width': '45px',
+      'height': '45px'
     }
   };
   carouselOption: OwlOptions = {
