@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
@@ -8,16 +8,17 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
   styleUrls: ['./confirmmail2.component.scss']
 })
 export class Confirmmail2Component implements OnInit {
-
-  constructor(private router: Router) { }
+  emailGet:String;
+  constructor(private router: Router, private route: ActivatedRoute) { }
   // set the currenr year
   year: number = new Date().getFullYear();
   ngOnInit(): void {
+    this.emailGet = this.route.snapshot.queryParams['emailGet'] || '';
   }
 
   irParaLogin()
   {
-    this.router.navigate(['/account/login-2'])
+    this.router.navigate(['/account/login-2'], { queryParams: { emailGet: this.emailGet } })
   }
 
 }

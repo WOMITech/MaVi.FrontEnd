@@ -61,7 +61,7 @@ export class Steptwoverification2Component implements OnInit {
 
   verificarEmail(){
     this.userService.verificar(new Verificar(this.emailGet, this.otp)).subscribe((res: ResponseVerificar) => {
-      this.router.navigate(['/account/confirm-email-2']);
+      this.router.navigate(['/account/confirm-email-2'], { queryParams: { emailGet: this.emailGet }});
     },
       (error => {
         
