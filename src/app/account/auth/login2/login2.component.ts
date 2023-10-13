@@ -46,6 +46,10 @@ export class Login2Component implements OnInit {
     // get return url from route parameters or default to '/'
     // tslint:disable-next-line: no-string-literal
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+    if(Security.hasToken() && !Security.hasExpiredToken()){
+      this.router.navigate([this.returnUrl]);
+    }
   }
 
   carouselOption: OwlOptions = {

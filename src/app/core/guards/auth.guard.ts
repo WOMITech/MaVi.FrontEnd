@@ -15,11 +15,17 @@ export class AuthGuard implements CanActivate {
         private authFackservice: AuthfakeauthenticationService
     ) { }
 
+    
+
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        if (Security.hasToken()) {
-                return true;
+        let tempoFim = Security.GetLoggedUserTokenExpirationDate();
+
+
+        if (Security.hasToken() && !Security.hasExpiredToken()) {
+            return true;
         }
         // not logged in so redirect to login page with the return url
+        Security.clear();
         this.router.navigate(['/account/login-2'], { queryParams: { returnUrl: state.url } });
         return false;
     }

@@ -17,26 +17,31 @@ export class HttpSend {
     }
 
     private checarTempo(): boolean {
-        // let tempoFim = new Date(Security.getTempo()).getTime();
-        let tempoFim = new Date(Date.now() + (60000 * 49)).getTime();
-        let tempoToken = (Date.now() + (60000 * 42)) > tempoFim;
+        let tempoFim = Security.GetLoggedUserTokenExpirationDate();
 
-        if (tempoFim < Date.now()) {
+        if(!tempoFim)
+            return true;
+        // let tempoFim = new Date(Date.now() + (60000 * 49)).getTime();
+        let date = new Date()
+        let ms = date.getTime();
+        let seconds = ms / 1000;
+        let tempoToken = seconds > tempoFim;
+
+        if (tempoFim < seconds) {
             if (HttpSend.desconectando) return false;
             HttpSend.desconectando = true;
             Swal.fire('Conexão expirada', `Você foi desconectado por tempo de inatividade`, 'error').then(
                 result => {
                     HttpSend.desconectando = false;
                     Security.clear();
-                    this.route.navigate(['/account/login'])
+                    this.route.navigate(['/account/login-2'])
                 }
             );
             return false;
         } else if (tempoToken && !HttpSend.buscandoToken) {
             HttpSend.buscandoToken = true;
-            this.put(
-                `${environment.urlApi}/Login/Token`,
-                '',
+            this.get(
+                `${environment.urlApi}/reset-token`,
                 {
                     headers: new HttpHeaders({
                         'Content-Type': 'application/json',
@@ -47,8 +52,7 @@ export class HttpSend {
                 .subscribe(
                     result => {
                         if (!result.success) return;
-                        Security.setToken(result.token);
-                        Security.setTempo(result.expiration);
+                        Security.set(result.data);
                     },
                     err => { },
                     () => HttpSend.buscandoToken = true

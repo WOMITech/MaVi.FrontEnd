@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { revenueBarChart, statData } from './data';
 
 import { ChartType } from './profile.model';
+import { Security } from 'src/app/utils/security.util';
 
 @Component({
   selector: 'app-profile',
@@ -16,6 +17,8 @@ import { ChartType } from './profile.model';
 export class ProfileComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
+  public userName: string = Security.GetLoggedUserName();
+  public userEmail: string = Security.GetLoggedUserEmail();
 
   revenueBarChart: ChartType;
   statData;

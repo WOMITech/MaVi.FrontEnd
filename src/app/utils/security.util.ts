@@ -1,4 +1,6 @@
+import { DecriptedToken } from "../models/user/decriptedToken.model";
 import { ResponseDataAutenticar } from "../models/user/response/responseData.autenticar.model";
+import jwt_decode from "jwt-decode";
 
 export class Security {
   public static setEach(token: string, id: string, name: string, email: string, roles: string[]) {
@@ -20,13 +22,83 @@ export class Security {
 
 
   public static setToken(token: string) {
+    this.setDecriptedToken(token);
     localStorage.setItem(btoa('mavi.token'), btoa(token));
   }
 
+  public static setDecriptedToken(token: string) {
+  var decriptedToken = jwt_decode(token);
+    // localStorage.setItem(btoa('mavi.decriptedToken'), btoa(JSON.stringify(decriptedToken)));
+    localStorage.setItem('mavi.decriptedToken', JSON.stringify(decriptedToken));
+  }
   public static getToken(): string | null {
     const data = localStorage.getItem(btoa('mavi.token'));
+    // const data = localStorage.getItem('mavi.token');
     if (data) {
       return atob(data);
+    } else {
+      return null;
+    }
+  }
+
+  public static getDecriptedToken(): DecriptedToken{
+    // const data = JSON.parse(atob(localStorage.getItem(btoa('mavi.decriptedToken'))));
+    const data = JSON.parse(localStorage.getItem('mavi.decriptedToken'));
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  public static GetLoggedUserId(): string {
+    var decriptedToken = this.getDecriptedToken();
+    var data = decriptedToken.Id;
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  public static GetLoggedUserName(): string {
+    var decriptedToken = this.getDecriptedToken();
+    var data = decriptedToken.given_name;
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  public static GetLoggedUserEmail(): string {
+    var decriptedToken = this.getDecriptedToken();
+    var data = decriptedToken.unique_name;
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  public static GetLoggedUserRoles(): string[] {
+    var decriptedToken = this.getDecriptedToken();
+    var data = decriptedToken.role;
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  
+  public static GetLoggedUserTokenExpirationDate(): number | null {
+    var decriptedToken = this.getDecriptedToken();
+    if (!decriptedToken)
+      return null;
+    var data = decriptedToken.exp;
+    if (data) {
+      return data;
     } else {
       return null;
     }
@@ -91,21 +163,23 @@ export class Security {
       return false;
   }
 
+  public static hasExpiredToken(): boolean {
+    let tempoFim = this.GetLoggedUserTokenExpirationDate();
+    if(!tempoFim)
+        return true;
+    // let tempoFim = new Date(Date.now() + (60000 * 49)).getTime();
+    let date = new Date()
+    let ms = date.getTime();
+    let seconds = ms / 1000;
+    let tempoToken = seconds > tempoFim;
 
-
-  public static getTempo(): string | null {
-    const data = localStorage.getItem(btoa('mavitempo'));
-    if (data) {
-      return atob(data);
-    } else {
-      return null;
-    }
+    if(tempoToken)
+      return true;
+    else
+      return false;
   }
 
-  public static setTempo(tempo: string) {
-    localStorage.setItem(btoa('mavitempo'), btoa(tempo));
-  }
-
+  
 
 
   public static clear() {
