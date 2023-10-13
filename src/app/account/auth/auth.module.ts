@@ -6,17 +6,19 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
 import { UIModule } from '../../shared/ui/ui.module';
-import { LoginComponent } from './login/login.component';
 import { Login2Component } from './login2/login2.component';
-import { SignupComponent } from './signup/signup.component';
 import { Register2Component } from './register2/register2.component';
 import { Recoverpwd2Component } from './recoverpwd2/recoverpwd2.component';
 
 import { AuthRoutingModule } from './auth-routing';
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
+import { Verification2Component } from './verification2/verification2.component';
+import { Steptwoverification2Component } from './steptwoverification2/steptwoverification2.component';
+import { NgOtpInputModule } from 'ng-otp-input';
+import { ResetPassword2Component } from './reset-password-2/reset-password-2.component';
 
 @NgModule({
-  declarations: [LoginComponent, Login2Component, SignupComponent, PasswordresetComponent, Register2Component, Recoverpwd2Component],
+  declarations: [ Steptwoverification2Component, ResetPassword2Component, Verification2Component, Login2Component, PasswordresetComponent, Register2Component, Recoverpwd2Component],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,7 +26,8 @@ import { PasswordresetComponent } from './passwordreset/passwordreset.component'
     NgbAlertModule,
     UIModule,
     AuthRoutingModule,
-    CarouselModule
+    CarouselModule,
+    NgOtpInputModule
   ]
 })
 export class AuthModule { }

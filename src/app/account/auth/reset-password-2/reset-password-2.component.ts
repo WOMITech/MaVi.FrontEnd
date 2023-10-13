@@ -11,14 +11,16 @@ import { UserService } from 'src/app/services/user.service';
 import { Criar } from 'src/app/models/user/request/criar.model';
 import Swal from 'sweetalert2';
 import { ResponseCriar } from 'src/app/models/user/response/response.criar.model';
+import { ResetarSenha } from 'src/app/models/user/request/resetar-senha.model';
 
 @Component({
-  selector: 'app-register2',
-  templateUrl: './register2.component.html',
-  styleUrls: ['./register2.component.scss']
+  selector: 'app-reset-password-2',
+  templateUrl: './reset-password-2.component.html',
+  styleUrls: ['./reset-password-2.component.scss']
 })
-export class Register2Component implements OnInit {
-
+export class ResetPassword2Component implements OnInit {
+  emailGet: string;
+  resetCodeGet: string;
   signupForm: FormGroup;
   submitted = false;
   error = '';
@@ -30,10 +32,11 @@ export class Register2Component implements OnInit {
 
   ngOnInit(): void {
     document.body.classList.add('auth-body-bg')
-
+    this.emailGet = this.route.snapshot.queryParams['emailGet'] || 'exemplo@email.com';
+    this.resetCodeGet = this.route.snapshot.queryParams['resetCodeGet'] || '';
     this.signupForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      name: [this.resetCodeGet, Validators.required],
+      email: [this.emailGet, [Validators.required, Validators.email]],
       senha: ['', Validators.required],
     });
   }
@@ -59,13 +62,14 @@ export class Register2Component implements OnInit {
    */
   onSubmit() {
     this.submitted = true;
+    this.error = '';
 
     // stop here if form is invalid
     if (this.signupForm.invalid) {
       return;
     } 
 
-    this.userService.criar(new Criar(this.signupForm.controls['name'].value, this.signupForm.controls['email'].value, this.signupForm.controls['senha'].value)).subscribe((res: ResponseCriar) => {
+    this.userService.resetarSenha(new ResetarSenha(this.signupForm.controls['email'].value, this.signupForm.controls['name'].value,  this.signupForm.controls['senha'].value)).subscribe((res: ResponseCriar) => {
       // if (res.isSuccess == false) {
       //   Swal.fire('', res.message, 'error');
       //         return;
@@ -81,6 +85,6 @@ export class Register2Component implements OnInit {
 
   timeToVerify(url: string)
   {
-    setTimeout(() => { this.router.navigate(['/account/verificar-email'], { queryParams: { emailGet: url } }); }, 1500);
+    setTimeout(() => { this.router.navigate(['/account/login-2'], { queryParams: { emailGet: url } }) }, 1500);
   }
 }

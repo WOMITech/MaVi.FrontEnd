@@ -5,6 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
+import { UserService } from 'src/app/services/user.service';
+import { Email } from 'src/app/models/user/request/email.model';
+import { ResponseVerificar } from 'src/app/models/user/response/response.verificar.model';
 
 @Component({
   selector: 'app-recoverpwd2',
@@ -12,7 +15,6 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./recoverpwd2.component.scss']
 })
 export class Recoverpwd2Component implements OnInit {
-
    // set the currenr year
    year: number = new Date().getFullYear();
 
@@ -21,8 +23,9 @@ export class Recoverpwd2Component implements OnInit {
    error = '';
    success = '';
    loading = false;
+   successmsg = false;
 
-   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) { }
+   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
     this.resetForm = this.formBuilder.group({
@@ -40,16 +43,20 @@ export class Recoverpwd2Component implements OnInit {
     this.success = '';
     this.submitted = true;
 
+    console.log('this.f.email.value');
+    console.log(this.f.email.value);
     // stop here if form is invalid
     if (this.resetForm.invalid) {
       return;
     }
-    if (environment.defaultauth === 'firebase') {
-      this.authenticationService.resetPassword(this.f.email.value)
-        .catch(error => {
-          this.error = error ? error : '';
-        });
-    }
+    this.userService.enviarCodigoResetSenha(new Email(this.f.email.value)).subscribe((res: ResponseVerificar) => {
+      console.log(res)
+      this.successmsg = true;
+      this.timeToReset(this.f.email.value);
+    },
+      (error => {
+        this.error = error ? error : '';
+      }));
   }
 
   carouselOption: OwlOptions = {
@@ -63,5 +70,10 @@ export class Recoverpwd2Component implements OnInit {
         items: 1
       },
     }
+  }
+
+  timeToReset(url: string)
+  {
+    setTimeout(() => { this.router.navigate(['/account/reset-password-2'], { queryParams: { emailGet: url } }); }, 1500);
   }
 }
